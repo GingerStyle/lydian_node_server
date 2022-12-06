@@ -5,6 +5,7 @@ const app = express();
 const port = 5001;
 
 app.use(express.static('server/public'));
+app.use(express.urlencoded());
 
 const quoteList = require('./modules/quoteList');
 
@@ -26,4 +27,12 @@ app.get('/quotes', function(req, res){
     //res.sendStatus(200);
 });
 
-
+app.post('/quotes', function(req, res){
+    console.log('in the post request!', req.body);
+    if(req.body.text && req.body.author){
+        quoteList.push(req.body);
+        res.sendStatus(201);
+    }else{
+        res.sendStatus(500);
+    }
+});
