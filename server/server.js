@@ -5,9 +5,14 @@ const app = express();
 const port = 5001;
 
 app.use(express.static('server/public'));
+
+//this is needed to send data from the front end to the back end
 app.use(express.urlencoded());
 
-const quoteList = require('./modules/quoteList');
+//you can drop the .js because it is being imported into a .js file
+const quoteRouter = require('./routes/quotes_router.js');
+
+app.use('/quotes', quoteRouter);
 
 app.listen(port, () => {
     console.log('listening on port', port);
@@ -15,24 +20,3 @@ app.listen(port, () => {
 
 //npm start to start server
 //control + c on terminal closes the server
-
-//create - post
-//read - get
-//update - put
-//delete - delete
-
-app.get('/quotes', function(req, res){
-    console.log('request for /quotes was made');
-    res.send(quoteList);
-    //res.sendStatus(200);
-});
-
-app.post('/quotes', function(req, res){
-    console.log('in the post request!', req.body);
-    if(req.body.text && req.body.author){
-        quoteList.push(req.body);
-        res.sendStatus(201);
-    }else{
-        res.sendStatus(500);
-    }
-});
